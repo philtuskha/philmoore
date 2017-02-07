@@ -1,0 +1,42 @@
+/* variables 
+---------------------*/
+
+$header-font: 'mont';
+$light-grey: #e6e6e6;
+$dark-grey: #565656;
+$grey-blue: #a7b6b7;
+$red: #ea5959;
+$rust: #ce6546;
+
+/* mixins
+--------------------*/
+
+@mixin linx ($link, $visit, $hover, $active) {
+  a {
+    color: $link;
+    &:visited {
+      color: $visit;
+    }
+    &:hover {
+      color: $hover;   
+    }
+    &:active {
+      color: $active;
+    }
+  }
+}
+
+@mixin gradient ($st-color, $st-width, $end-color, $end-width){
+  background: -webkit-linear-gradient(left,$st-color $st-width, $end-color $end-width);
+  background: -o-linear-gradient(left,$st-color $st-width, $end-color $end-width);
+  background: -moz-linear-gradient(left,$st-color $st-width, $end-color $end-width);
+  background: linear-gradient(to right,$st-color $st-width, $end-color $end-width);
+}
+
+@mixin three-gradient ($st-color, $st-width, $mid-color, $mid-width, $end-color, $end-width){
+  background: -webkit-linear-gradient(left,$st-color $st-width, $mid-color $mid-width, $end-color $end-width);
+  background: -o-linear-gradient(left,$st-color $st-width, $mid-color $mid-width, $end-color $end-width);
+  background: -moz-linear-gradient(left,$st-color $st-width, $mid-color $mid-width, $end-color $end-width);
+  background: linear-gradient(to right,$st-color $st-width, $mid-color $mid-width, $end-color $end-width);
+}
+
