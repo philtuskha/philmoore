@@ -61,8 +61,8 @@
   	left:-100%;
   	/*transform:translate(-150%, 0);*/
   	content:'';
-  	-webkit-animation: mymove 15s infinite;
-    animation: mymove 15s infinite;
+  	/*-webkit-animation: mymove 15s infinite;
+    animation: mymove 15s infinite;*/
     width:100%;
     height:100%;
     @include three-gradient ($light-grey, 0%, $grey-blue, 40%, $light-grey, 100%)

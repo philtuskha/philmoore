@@ -3,32 +3,34 @@
 	<div id="counter">{{constants.dis}}</div>
 		<div class="row">
 			<div class="description">
-				<section v-for="desc in description">
+				<section v-for="(desc, index) in description">
 					<h1>{{desc.title}}</h1>
-					<p>{{desc.tag}}</p>
-					<span id="spam">{{message}}, {{constants}}</span>here?
+					<p class="tag">{{desc.tag}}</p>
+					<!-- <p class="description" :class="{ hideP: !carousel[indexCheck(index)].cover }">{{desc.details}}</p> :class="{ hideCover: !carousel[index].cover }" -->
 				</section>
 			</div>
-			<div id="carousel-wrap" :style="stickyWrap">
-				<div id="carousel" :style="rotateObject">
+			<div id="karousel-wrap" :style="stickyWrap">
+
+				<div id="karousel" :style="rotateObject">
 					<figure v-for="car in carousel">
 						<div class="frame" v-on:click="car.show = !car.show">
-							<!-- <transition name="fade"> -->
+							<transition name="fade">
 								<img v-if="!car.show" :src="car.imgUrl">
 								<iframe v-if="car.show" :src="car.frameUrl"></iframe>
-							<!-- </transition> -->
-							<!-- <transition name="fade"> v-show="car.cover"-->
+							</transition>
 							<div class="frame-cover" :class="{ hideCover: !car.cover }"></div>
-							<!-- </transition> -->
 						</div>
 					</figure>
 				</div>
+				<h1>Sylvan Esso</h1>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default{
 	name:'slide2',
 	props:['message'],
@@ -37,11 +39,11 @@ export default{
 			description:[{
 				title: 'Sylvan Esso',
 				tag:'This site is great.  I made it.  It\'s very simple.  That\'s cool',
-				details:''
+				details:'Here some ver important details.  I\m excited to have made this site.  Now I can show all my friends the great stuff that I own forever.  You break it you buy it!'
 			},{
 				title: 'Day in the Life',
 				tag:'Here is a SPA web app I wrote once upon a time.',
-				details:''
+				details:'Here some ver important details.  I\m excited to have made this site.  Now I can show all my friends the great stuff that I own forever.  You break it you buy it!'
 			},{
 				title: 'Bar Virgile',
 				tag:'A website made for a Restaurant/Bar located in downtown Durham, NC',
@@ -107,107 +109,170 @@ export default{
 
 
 			},
-			rotateObject:{}
+			rotateObject:{},
+			stickyWrap:{}
 		}
 	},
 	watch: {
 		message: function(){
-			this.rotateCarousel()
+			this.stickyCarosuel()
 		}
 	},
 	methods: {
-		rotateCarousel: //_.debounce( 
-			function () {
+		indexCheck: function(i){
+			var realIndex = i == 0 ? 0 : 6 - i
+			return realIndex
+		},
+		coverReset: function(ar){
+			var c = this.carousel;
+			if(ar != null){
+				for(var i = 0; i < 6; i++){
+					if (i != ar){
+						c[i].cover = true
+						c[i].show = false
+					}else{
+						c[ar].cover = false
+
+					}
+				}
+			}else{
+				for(var i = 0; i < 6; i++){
+					c[i].cover = true
+
+				}
+			}
+		},
+		stickyCarosuel: function(){
+
+			var rungs = this.constants.winHeight,
+				winScroll = this.message - (this.constants.winHeight);
+
+			if(winScroll > 0 && winScroll < (rungs * 5.1)){
+				this.stickyWrap = {
+					position:'fixed',
+				}
+
+				this.rotateCarousel()
+
+
+			}else if(winScroll >= (rungs * 5.1)){
+				this.rotateObject = {
+					transition:'transform 1.5s',
+					transform:'rotateX(300deg)'
+				}
+
+				this.stickyWrap = {
+					position:'absolute',
+					top:(560) + 'vh'
+				}
+			}else{
+
+				this.rotateObject = {
+					transition:'transform 1.5s',
+					transform:'rotateX(0deg)'
+				}
+
+				this.stickyWrap = {
+					position:'absolute'
+				}
+				this.coverReset(null)
+				
+			}
+
+		},
+		rotateCarousel: _.debounce( function () {
 
 				var rungs = this.constants.winHeight,
-					rungHeight = Math.round(this.message % rungs),
+					rungHeight = Math.round((this.message - (rungs * 0.2)) % rungs),
 					winScroll = this.message - (this.constants.winHeight),
-					whichRung = Math.ceil((winScroll / rungs) - 0.2);
+					whichRung = Math.ceil((winScroll / rungs) - 0.2),
+					adjustedRung = Math.abs(whichRung - 6) % 6;
+					
 
-					this.constants.dis = Math.ceil((winScroll / rungs) - 0.2)//Math.abs(whichRung - 6) ;
-				// document.getElementById("counter").html('whichRung');	
+				// function coverReset(ar){
+				// 	console.log(ar != null)
+				// 	if(ar != null){
+				// 		for(var i = 0; i < 6; i++){
+				// 			if (i != ar){
+				// 				c[i].cover = true
+				// 				c[i].show = false
+				// 			}else{
+				// 				c[ar].cover = false
+				// 			}
+				// 		}
 
-				if(winScroll > 0 && winScroll < (rungs * 5.1)){
-					this.stickyWrap = {
-						position:'fixed'
-					}
+				// 	}else{
+				// 		for(var i = 0; i < 6; i++){
+				// 			c[i].cover = true
+				// 		}
 
+				// 	}
+				// }
 
+				///for build purposes
+				//this.constants.dis =  this.carousel[0].cover + ' : ' + rungHeight + ' : ' + this.constants.winHeight * 0.8 + ' : ' + adjustedRung
+
+				// if(winScroll > 0 && winScroll < (rungs * 5.1)){
+				// 	this.stickyWrap = {
+				// 		position:'fixed'
+				// 	}
 
 					if( this.constants.direction - this.message < 0){
 
-						if(rungHeight > (this.constants.winHeight * 0.2)){
+						if(rungHeight > 0 && rungHeight < (this.constants.winHeight * 0.8)){
 							this.rotateObject = {
 								transition:'transform 1.5s',
 								transform:'rotateX('+Math.round((whichRung * 60))+'deg)'
 							}
-							for(var i = 0; i < 6; i++){
-								this.carousel[i].cover = true
-							}
-						}
-						// if(rungHeight <= this.constants.winHeight/2){
-						// 	this.rotateObject = {
-						// 		transition:'transform 0.1s',
-						// 		transform:'rotateX('+Math.round((winScroll)*(60/rungs))+'deg)'
-						// 	}
-						// }else{
-						else if(rungHeight > 0 && rungHeight < (this.constants.winHeight * 0.2)){
 
+							this.coverReset(null)
+
+						}else{
+
+							this.coverReset(adjustedRung)
 							
-							for(var i = 0; i < 6; i++){
-								if (i != Math.abs(whichRung - 6)){
-									this.carousel[i].cover = true
-								}else{
-									this.carousel[Math.abs(whichRung - 6)].cover = false
-								}
-
-							}
 						}
 					}else{
-						if(rungHeight < (this.constants.winHeight * 0.2) ){
+						if(rungHeight > 0 && rungHeight < (this.constants.winHeight * 0.8)){
+
+							this.coverReset(null)
+
+						}else{
 							this.rotateObject = {
 									transition:'transform 1.5s',
-									transform:'rotateX('+Math.round((whichRung - 1) * 60)+'deg)'
+									transform:'rotateX('+Math.round((whichRung) * 60)+'deg)'
 								}
+							
+							this.coverReset(adjustedRung)
+
 						}
-						// if(rungHeight > this.constants.winHeight/2){
-						// 	this.rotateObject = {
-						// 		transition:'transform 0.3s',
-						// 		transform:'rotateX('+Math.round((winScroll)*(60/rungs))+'deg)'
-						// 	}
-						// }else{
-						// 	this.rotateObject = {
-						// 		transition:'transform 1s',
-						// 		transform:'rotateX('+Math.round((whichRung - 1) * 60)+'deg)'
-						// 	}
-						// }
 					}
-				}else if(winScroll >= (rungs * 5.1)){
+				// }else if(winScroll >= (rungs * 5.1)){
+				// 	this.rotateObject = {
+				// 		transition:'transform 1.5s',
+				// 		transform:'rotateX(300deg)'
+				// 	}
 
-					this.stickyWrap = {
-						position:'absolute',
-						top:(560) + 'vh'
-					}
+				// 	this.stickyWrap = {
+				// 		position:'absolute',
+				// 		top:(560) + 'vh'
+				// 	}
 
-					// this.rotateObject = {
-					// 	transition:'transform 0.06s',
-					// 	transform: 'rotateX('+((5) * 60)+'deg) translate3d(0,0,-'+((winScroll - (this.constants.winHeight*5)))+'px )' ///Y part -'+(0.5*(winScroll - (this.constants.winHeight*5)))+'px
-					// }
-				}else{
+				// }else{
+				// 	this.rotateObject = {
+				// 		transition:'transform 1.5s',
+				// 		transform:'rotateX(0deg)'
+				// 	}
 
-					this.stickyWrap = {
-						position:'absolute'
-					}
-
-					// this.rotateObject = {
-					// 	transition:'none',
-					// 	transform:'translateY('+Math.abs(winScroll)+'px)'
-					// }
-				}
+				// 	this.stickyWrap = {
+				// 		position:'absolute'
+				// 	}
+				// 	coverReset(null)
+					
+				// }
 
 				this.constants.direction = this.message
-			} 
-			//, 450 );
+			}, 0 )
 		
 	}
 }
@@ -227,10 +292,10 @@ export default{
 .slide2{
   color:#fff;
   background:#4a4a4a;
-  /*background: -webkit-linear-gradient(left,#333,#4a4a4a 10%, #4a4a4a 80%, #333 96%);
+  background: -webkit-linear-gradient(left,#333,#4a4a4a 10%, #4a4a4a 80%, #333 96%);
   background: -o-linear-gradient(left,#333,#4a4a4a 10%, #4a4a4a 80%, #333 96%);
   background: -moz-linear-gradient(left,#333,#4a4a4a 10%, #4a4a4a 80%, #333 96%);
-  background: linear-gradient(to right, #333,#4a4a4a 10%, #4a4a4a 80%, #333 96%);*/
+  background: linear-gradient(to right, #333,#4a4a4a 10%, #4a4a4a 80%, #333 96%);
   height:600vh;
 
   	.row{
@@ -241,25 +306,29 @@ export default{
 	  position:relative;
 	  z-index:3;
 	  height:100vh;
+	  pointer-events: none;
+
+	  .tag{
+	  	font-size:1.4em;
+	  }
+
+	  .description{
+	  	display:block;
+	  	margin:10vh 0 0 12vw;
+	  	width:56vw;
+	  	text-align:justify;
+	  	line-height: 2em;
+	  	opacity:1;
+	    visibility:visible;
+	    transition:opacity 0.7s, visibility 0.7s;
+
+	  }
+	  .hideP{
+	  	opacity:0;
+		visibility:hidden;
+	  }
 	}
-	/*#carousel-wrap::after{
-		content:'';
-		position:fixed;
-		background: linear-gradient(to bottom, rgba(74,74,74,1) 80%, transparent 100%);
-		transform:translate3d(-80vh,-48vh,1vh);
-		width:150%;
-		height:30vh;
-	}*/
-	/*#carousel-wrap::before{
-		content:'';
-		position:fixed;
-		background: linear-gradient(to top, rgba(74,74,74,1) 70%, transparent 100%);
-		transform:translate3d(-80vh,39vh,1vh);
-		width:150%;
-		height:20vh;
-		z-index:4;
-	}*/
-	#carousel-wrap{
+	#karousel-wrap{
 	  position:absolute;
 	  top:50vh;
 	  left:10vw;
@@ -269,7 +338,7 @@ export default{
 	  -webkit-perspective:1000px; 
 	  perspective: 1000px;
 
-		#carousel{
+		#karousel{
 		  position: absolute;
 		  width:40vw;
 		  height:40vh;
@@ -322,20 +391,23 @@ export default{
 			  -o-transform-origin: 0 0;
 			  -webkit-transform: scale(0.5);
 			  -webkit-transform-origin: 0 0;
+			  cursor:pointer;
 			}
 			img{
 			  width:100%;
+			  cursor:pointer;
 			}
 			.frame-cover{
 			  position:absolute;
 			  top:0;
 			  left:0;
-			  width:100%;
+			  width:105%;
 			  height:80vh;
-			  background:rgba(0,0,0,0.7);
+			  background:rgba(25,25,25,0.8);
 			  opacity:1;
 			  visibility:visible;
 			  transition:opacity 0.7s, visibility 0.7s;
+
 			}
 			.hideCover{
 				opacity: 0;

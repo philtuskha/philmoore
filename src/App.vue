@@ -21,7 +21,6 @@ import slide2 from './components/slide2.vue'
 import slide3 from './components/slide3.vue'
 import slide4 from './components/slide4.vue'
 
-import _ from 'lodash'
 
 export default {
   name: 'app',
@@ -39,9 +38,9 @@ export default {
   	}
   },
   methods: {
-  	handleScroll: _.debounce(function(){
+  	handleScroll: function(){
         this.scrolled = document.body.scrollTop;
-    }, 10)
+    }
   },
   created: function() {
     window.addEventListener('scroll', this.handleScroll)
@@ -69,11 +68,12 @@ h1{
 	margin: 26px 0 10px;
 }
 .container{
-  /*position:relative;
-  margin:0 auto;*/
+  position:relative;
+  /*margin:0 auto;*/
   text-align:center;
   min-height:100vh;
   width:100%;
+  z-index:3;
 }
 .row{
   position:relative;
