@@ -2,7 +2,7 @@
 	<header>
 	   	<nav>
 	   		<ul>
-	   			<li v-for="n in nav"><a :href="'#' + n.item">{{n.item}}</a></li>
+	   			<li v-for="n in nav"><a :href="'#/' + n.item">{{n.item}}</a></li>
 	   		</ul>
 	   	</nav>
    	</header>
@@ -11,16 +11,40 @@
 <script>
 export default{
 	name: 'header-nav',
+	props:['message'],
 	data () {
 		return{
 			nav: [
 				{item:'Home'},
 				{item:'Work'},
-				{item: 'Skills'}, 
+				{item: 'About'}, 
 				{item:'Contact'}
-			]
+			],
+			section: window.location.hash
 		}
+	},
+	watch: {
+		message: function(){
+			
+			this.followNav()
+		}
+	},
+	methods:{
+		 followNav: function(){
+
+		// 	this.constants.lineLeft = {
+		// 		'left': '500px'
+		// 	}
+		// 	console.log(this.constants.lineLeft)
+		 }
 	}
+	// ,
+	// mounted: function() {
+
+	// 	window.onpopstate = function () {
+ //              console.log(window.location.hash);
+ //         }
+	// }
 }
 </script>
 
@@ -42,6 +66,8 @@ header{
 		z-index: 100;
 	}
 	nav{
+		position:relative;
+
 		ul{
 			list-style: none;
 			background:$red;
@@ -69,6 +95,30 @@ header{
 
 		}
 		@include linx(#fff, #fff, #ffc7b3, #ffc7b3)
+
+		
 	}
+}
+/* tablet */
+@media only screen and (min-device-width: 768px) 
+and (max-device-width: 1024px){
+
+	  
+}
+/* phone */
+@media only screen 
+  and (max-device-width: 767px){ 
+  	header{
+  		nav{
+  			ul{
+  				display: -webkit-flex;  /*do some css3 mixin stuff here*/
+				-webkit-justify-content: space-between;
+				display: flex;
+				justify-content: space-between;
+
+  			}
+  		}
+  	}
+	
 }
 </style>
