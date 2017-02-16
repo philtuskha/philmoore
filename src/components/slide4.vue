@@ -65,6 +65,8 @@ export default{
 
 
 .slide4{
+   z-index:3;
+   background:#fff;
 
   .contact-container{
   	position:relative;

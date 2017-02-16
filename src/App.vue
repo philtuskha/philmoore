@@ -40,9 +40,10 @@ export default {
   data () {
 		return{
 			scrolled: 0,
+			lastScroll: 0,
 			page:'',
 			sech:'',
-			sections:['#/Contact','#/About','#/Work/5','#/Work/4','#/Work/3','#/Work/2','#/Work/1','#/Work','#/Home'],
+			sections:['#/Contact','#/About','#/Work/6','#/Work/5','#/Work/4','#/Work/3','#/Work/2','#/Work/1','#/Home'],
 			relTagged:[],
 			currKey:18,
 			winHeight: window.innerHeight,
@@ -73,24 +74,31 @@ export default {
 		var rel = this.relTagged;
 
         for(var k = 0; k < rel.length; k++){
-
+        	//console.log(this.scrolled, this.lastScroll)
         	if(this.scrolled >= rel[k] && this.currKey != k){
-        		var currSection = this.sections[k]
-	        	window.history.pushState(null, null, "/"+currSection+"");
-	        	
+        		//console.log(this.scrolled, rel[k])
+        		
+	        	var currSection = this.sections[k]
 	        	this.currKey = k
 	        	//console.log(this.navPos[currSection.split('/')[1]], currSection.split('/')[1], currSection)
 	        	this.sech = currSection
 	        	this.underlineNav(this.navPos[currSection.split('/')[1]])
 
 	        	this.page = currSection.split('/')[1]
-	        	//console.log()
+
+	        	window.history.pushState(null, null, "/"+currSection+"");
 	        	break;
+
+	        	
+	        	//console.log('get here')
 	        }else if(this.scrolled >= rel[k] && this.currKey == k){
 	        	break;
 	        }
 	        
         }
+
+        this.lastScroll = this.scrolled
+        //console.log('-------------------------')
 	},  // 50),
     setSections: _.debounce(function(){
     	////Set the change positions for page

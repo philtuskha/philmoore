@@ -55,7 +55,7 @@
 .slide3{
   background:#5e5353;
   z-index:3;
-  /*height:100vh;*/
+  
 
   h1{
   	color:#fff;

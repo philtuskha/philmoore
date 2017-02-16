@@ -22,25 +22,25 @@
 						</div>
 					</figure>
 				</div>
-				<div class="rotate-details" :class="{ showRotateDeets: !carousel[slideNumber].cover, showProject:readProject }">
+				<div class="rotate-details" :class="{ showRotateDeets: !carousel[indexCheck(slideAdjusted)].cover, showProject:readProject }">
 					<div v-on:click="readProj">Project Goal</div>
 					<div v-on:click="readImp">Implementation</div>
 				</div>
 				<div class="site-details" :class="{rotateRight: readProject, rotateLeft: readImplementation }">
-					<div class="left-carousel" :class="{ showCar: !carousel[slideNumber].cover, showProject:readProject }">
+					<div class="left-carousel" :class="{ showCar: !carousel[indexCheck(slideAdjusted)].cover, showProject:readProject }">
 						<ul>
 							<li>
-								<h3><span v-for="h in description[indexCheck(slideNumber)].left.headline" v-html="h"></span></h3>
-								<span v-html="description[indexCheck(slideNumber)].left.item"></span>
+								<h3><span v-for="h in description[slideAdjusted].left.headline" v-html="h"></span></h3>
+								<span v-html="description[slideAdjusted].left.item"></span>
 								<p>---click to load ---></p>
 							</li>
 						</ul>
 					</div>
-					<div class="right-carousel" :class="{ showCar: !carousel[slideNumber].cover, showImplementation: readImplementation }">
+					<div class="right-carousel" :class="{ showCar: !carousel[indexCheck(slideAdjusted)].cover, showImplementation: readImplementation }">
 						<ul>
 							<li>
-								<h3><span v-for="h in description[indexCheck(slideNumber)].right.headline">{{h}}</span></h3>
-								<span v-html="description[indexCheck(slideNumber)].right.item"></span>
+								<h3><span v-for="h in description[slideAdjusted].right.headline">{{h}}</span></h3>
+								<span v-html="description[slideAdjusted].right.item"></span>
 							</li>
 						</ul>
 					</div>
@@ -188,19 +188,29 @@ export default{
 				direction: 0,
 				// dis: ''
 			},
-			rotateObject:{},
+			rotateObject:{
+				'transform':'rotateX(0deg)'
+			},
 			stickyWrap:{},
 			slideNumber: 0,
+			slideAdjusted: 0,
+			slideTop: 0,
+			lastSwitch: 0,
+			switchSlide: 0,
+			showSlide: 0,
 			readProject:false,
 			readImplementation:false
 		}
 	},
 	watch: {
-		message: function(){
+		slide: function(){
 			this.stickyCarosuel()
 		},
-		slide: function(){
-			
+		message: function(){
+			if(this.slideNumber != 0){
+				this.rotateCarousel()
+				// console.log(this.slideNumber)
+			}
 		}
 	},
 	methods: {
@@ -208,7 +218,7 @@ export default{
 			var realIndex = i == 0 ? 0 : 6 - i
 			return realIndex
 		},
-		coverReset: function(ar){
+		coverReset: function(ar){ 
 			var c = this.carousel;
 			if(ar != null){
 				for(var i = 0; i < 6; i++){
@@ -228,31 +238,9 @@ export default{
 			}
 		},
 		stickyCarosuel: function(){
-			console.log(this.slide)
-			var rungs = this.$parent._data.winHeight,
-				winScroll = this.message - (this.$parent._data.slide1Height);
-				//console.log(winScroll)
-			// this.constants.dis = winScroll
+			var splitSlide = this.slide.split('/')
 
-			if(winScroll >= 0 && winScroll < (rungs * 5.1)){
-				this.stickyWrap = {
-					position:'fixed',
-				}
-
-				this.rotateCarousel()
-
-
-			}else if(winScroll >= (rungs * 5.1)){
-				this.rotateObject = {
-					transition:'transform 1.5s',
-					transform:'rotateX(300deg)'
-				}
-
-				this.stickyWrap = {
-					position:'absolute',
-					top:(560) + 'vh'
-				}
-			}else{
+			if(splitSlide[1] == 'Home'){
 
 				this.rotateObject = {
 					transition:'transform 1.5s',
@@ -262,62 +250,131 @@ export default{
 				this.stickyWrap = {
 					position:'absolute'
 				}
-				this.coverReset(null)
-				
-			}
-
-		},
-		rotateCarousel: function () { //_.throttle( 
-
-				var rungs = this.$parent._data.winHeight,  ///height of each section
-					rungHeight = Math.round((this.message % rungs) ),  ///offset height to reset to 0 at specific point in slide to 'do stuff' (rungs * 0.2)
-					winScroll = this.message - (this.$parent._data.slide1Height),  ///how far down you are scrolled - the height of slide1
-					whichRung = Math.ceil((winScroll / rungs) - 0.2),  ///the slide number you are in
-					adjustedRung = Math.abs(whichRung - 6) % 6;  ///the opposite slide on the carousel to make up for reverse carousel
-
-				if( this.constants.direction - this.message < 0){
-
-					if(rungHeight > 0){
-						
-						this.rotateObject = {
-							transition:'transform 1.5s',
-							transform:'rotateX('+Math.round((whichRung * 60))+'deg)'
-						}
+				this.coverReset(0)
+				this.slideNumber = 0
+				this.slideAdjusted = 0
 
 
-						console.log(rungHeight, (this.$parent._data.winHeight * 0.7))
-						if(rungHeight < (this.$parent._data.winHeight * 0.7)){
-							this.coverReset(null)
-							this.readProject = false
-							this.readImplementation = false
-						}else{
-							this.slideNumber = adjustedRung;
-							this.coverReset(adjustedRung)
-						}	
 
-					}else{
-						this.slideNumber = adjustedRung;
-						this.coverReset(adjustedRung)
-					}
-				}else{
-					console.log(rungHeight, 0,  (this.$parent._data.winHeight * 0.7))
-					if(rungHeight > 0 && rungHeight < (this.$parent._data.winHeight * 0.7)){
-						this.readProject = false
-						this.readImplementation = false
+			}else if(splitSlide[1] == 'Work' && splitSlide[2] != '6'){
+				console.log('whahuh??')
+				this.stickyWrap = {
+					position:'fixed'
+					
+				}				
+
+				this.lastSwitch = 0
+				this.slideTop = this.message
+				this.slideNumber = splitSlide[2]
+				this.switchSlide = Math.round(this.$parent._data.winHeight * 0.2) + this.message
+				this.showSlide = Math.round(this.$parent._data.winHeight * 0.7)  + this.message
+
+				///for when skipping ahead with arrow nav or menu nav
+				if(Math.abs(this.constants.direction - this.message) > this.$parent._data.winHeight/4){
+
+					this.slideAdjusted = this.slideNumber - 1
+					this.readImplementation = false
+					this.readProject = false
+					if(this.carousel[this.indexCheck(splitSlide[2] - 1)].cover){
 						this.coverReset(null)
+						this.carousel[this.indexCheck(splitSlide[2] - 1)].cover = false
+					}
 
-					}else{
-						this.rotateObject = {
-								transition:'transform 1.5s',
-								transform:'rotateX('+Math.round((whichRung) * 60)+'deg)'
-							}
+					this.stickyWrap = {
+						position:'fixed'
+						
+					}
 
-						this.slideNumber = adjustedRung;
-						this.coverReset(adjustedRung)
-
+					this.rotateObject = {
+						transition:'transform 1.5s',
+						transform:'rotateX('+ ((splitSlide[2] - 1) * 60) +'deg)'
 					}
 				}
 
+
+			}else if(splitSlide[1] == 'Work' && splitSlide[2] == '6'){
+				this.stickyWrap = {
+					position:'fixed'
+					
+				}
+				this.slideNumber = 5
+			}
+			else if(splitSlide[1] == 'About' || splitSlide[1] == 'Contact' && splitSlide[2] != '6'){ //splitSlide[2] != '6'
+				this.rotateObject = {
+					transition:'transform 1.5s',
+					transform:'rotateX(300deg)'
+				}
+				this.slideNumber = 0
+				//this.direction = this.$parent._data.relTagged[5]
+			}
+		},
+		rotateCarousel: function () { //_.throttle( 
+				
+				if( this.constants.direction - this.message < 0){
+					if(this.message > this.switchSlide){
+						var rot = this.rotateObject.transform,
+							rotNum = parseInt(rot.split('(')[1].split('d')[0]),
+							newRot = Math.round(this.slideNumber * 60)
+						
+						//rotate once if 
+						if(rotNum != newRot){
+							this.rotateObject = {
+								transition:'transform 1.5s',
+								transform:'rotateX('+newRot+'deg)'
+							}
+							this.coverReset(null)
+							this.readImplementation = false
+							this.readProject = false
+						}
+
+						//uncover once
+						if(this.message > this.showSlide){
+							if(this.carousel[this.indexCheck(this.slideNumber)].cover){
+								//console.log(this.carousel[this.indexCheck(this.slideNumber)].cover)
+								this.coverReset(this.indexCheck(this.slideNumber))	
+							}
+							this.slideAdjusted = this.slideNumber
+						}
+
+
+					}else{
+						//console.log('?????? revealed already')
+					}
+				}else{
+					// console.log(this.message, this.switchSlide - this.$parent._data.winHeight)
+					if(this.message < this.switchSlide - this.$parent._data.winHeight){
+						var rot = this.rotateObject.transform,
+							rotNum = parseInt(rot.split('(')[1].split('d')[0]),
+							newRot = Math.round((this.slideNumber - 1) * 60)
+							//console.log(rotNum, newRot)
+						//rotate once
+						if(rotNum != newRot){
+							
+							this.rotateObject = {
+								transition:'transform 1.5s',
+								transform:'rotateX('+Math.round(((this.slideNumber - 1) * 60))+'deg)'
+							}
+							this.coverReset(this.indexCheck(this.slideNumber) + 1)
+
+							this.slideAdjusted = this.slideNumber - 1
+							this.readImplementation = false
+							this.readProject = false
+
+						}			
+					}else{
+						
+						if(this.message < this.showSlide - this.$parent._data.winHeight){
+							//console.log('down here')
+							//uncover once
+							//console.log(this.carousel[this.indexCheck(this.slideNumber)].cover, this.carousel[this.indexCheck(this.slideNumber - 1)].cover)
+							if(!this.carousel[this.indexCheck(this.slideNumber)].cover){
+								// console.log(this.carousel[this.slideAdjusted].cover)
+								this.coverReset(null)
+							}							
+						}
+					}
+				}
+				console.log(this.constants.direction - this.message)
 				this.constants.direction = this.message
 			}, // 56 ),
 		readProj: function(){
@@ -326,7 +383,7 @@ export default{
 			console.log(this.rotateObject.transform)
 			var r = this.rotateObject.transform.split(')')[0] + ')'
 			this.rotateObject = {
-				'transition':'transform 1s',
+				'transition':'transform 0.8s',
 				'transform':r +' translateX(120%)'//this.rotateObject.transform + 
 			}
 		},
@@ -336,10 +393,17 @@ export default{
 			console.log(this.rotateObject.transform.split(')')[0])
 			var r = this.rotateObject.transform.split(')')[0] + ')'
 			this.rotateObject = {
-				'transition':'transform 1s',
+				'transition':'transform 0.8s',
 				'transform':r +' translateX(-120%)'
 			}
 		}
+		
+	},
+	mounted: function(){
+		///SUCH A HACK!!!! getting that 
+		setTimeout(function(){
+			window.scrollTo(0, document.body.scrollTop + 2)
+		}, 200)
 		
 	}
 }
@@ -405,7 +469,7 @@ export default{
 
 	  	.rotate-details{
 	  		position:absolute;
-	  		top:-24vh;
+	  		top:-27vh;
 	  		left:0;
 	  		height:2em;
 	  		width:100%;
@@ -456,7 +520,7 @@ export default{
 	  			color:#fff;
 	  			padding:0;
 	  			color:$grey-blue;
-	  			transition:transform 1s;
+	  			transition:opacity 0.5s, transform 1s;
 
 	  			ul{
 	  				list-style: none;
