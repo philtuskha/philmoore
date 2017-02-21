@@ -60,18 +60,17 @@ header{
 	height:40px;
 	z-index: 100;
 
+	
 	nav{
+		position:relative;
 		width:100%;
 		height:40px;
 		z-index: 100;
-	}
-	nav{
-		position:relative;
 
 		ul{
 			list-style: none;
 			background:$red;
-			border-bottom:1px solid $rust;
+			border-bottom:1px solid #bc5959;
 			height:40px;
 			margin:0;
 			padding:0;
@@ -84,14 +83,17 @@ header{
 			vertical-align: top;
 			height:40px;
 			padding:11px 20px;
+			cursor:pointer;
 		}
 
 		a{
 			height:40px;
 			padding:8px 20px;
-			font-family:$header-font;
+			font-family:'mont';
+			letter-spacing: 0.2em;
 			text-decoration:none;
 			text-transform:uppercase;
+			cursor:pointer;
 
 		}
 		@include linx(#fff, #fff, #ffc7b3, #ffc7b3)
@@ -100,22 +102,31 @@ header{
 	}
 }
 /* tablet */
-@media only screen and (min-device-width: 768px) 
+@media screen and (min-width: 768px) 
 and (max-device-width: 1024px){
 
 	  
 }
 /* phone */
-@media only screen 
-  and (max-device-width: 767px){ 
+@media screen 
+  and (max-width: 767px){ 
   	header{
+
   		nav{
   			ul{
-  				display: -webkit-flex;  /*do some css3 mixin stuff here*/
+  				/*display: -webkit-flex;  
 				-webkit-justify-content: space-between;
 				display: flex;
-				justify-content: space-between;
+				justify-content: space-between;*/
 
+  			}
+  			li{
+  				padding:12px 0px;
+  			}
+  			a{
+  				font-size: 0.8em;
+  				font-family:'mont-light';
+  				letter-spacing: 0.1em
   			}
   		}
   	}

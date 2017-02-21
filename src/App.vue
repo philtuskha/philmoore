@@ -47,6 +47,7 @@ export default {
 			relTagged:[],
 			currKey:18,
 			winHeight: window.innerHeight,
+			winWidth: window.innerWidth,
 			slide1Height: 0,
 			navPos:{
 				Home:0,
@@ -137,7 +138,12 @@ export default {
 
 		///reset windowHeight
 		this.winHeight = window.innerHeight
+
+		//reset slide1 height
 		this.slide1Height = document.getElementsByClassName('slide1')[0].clientHeight
+
+		//reset winWidth
+		this.winWidth = window.innerWidth
 
     },300)
   },
@@ -157,14 +163,23 @@ export default {
 
 <style lang="sass" >
 @import 'stylesheets/partials/_normalize.scss';
+@import 'stylesheets/partials/resources';
 
 @font-face {
     font-family: 'mont';
     src: url(src/fonts/Montserrat-Hairline.otf) format("opentype")
 }
 @font-face {
+    font-family: 'mont-light';
+    src: url(src/fonts/Montserrat-Light.otf) format("opentype")
+}
+@font-face {
     font-family: 'orator';
     src: url(src/fonts/OratorStd.otf) format("opentype")
+}
+@font-face {
+    font-family: 'raleway';
+    src: url(src/fonts/Raleway-light.ttf) format("truetype")
 }
 html,body{
   font-family:'orator';
@@ -172,6 +187,7 @@ html,body{
   width:100%;
   overflow-x: hidden;
    -webkit-overflow-scrolling:touch;
+   background:#53545e;
 }
 h1{
 	font-size:5em;
@@ -182,6 +198,7 @@ p.tag{
 	font-size:1.4em;
   	margin:0 auto;
   	max-width:50vw;
+  	/*font-family:'raleway';*/
 }
 .container{
   position:relative;
@@ -208,13 +225,17 @@ p.tag{
 	left:9%;
 	height:1px;
 	width:6.5%;
-	border-bottom:1px solid #ffc7b3;
+	border:none;
+	/*border-bottom:1px solid #fff;*/
+	/*background:#fff;*/
 	z-index: 101;
 	transition:left 1s;
-	box-shadow: 0px -1px 6px rgba(0,0,0,0.2);
+	overflow:hidden;
+	@include three-gradient (rgba(255,255,255,0.02), 0%, rgba(255,255,255,1), 50%, rgba(255,255,255,0.01), 100%)
+
+	/*box-shadow: 0px -1px 6px rgba(0,0,0,0.2);*/
 }
-@media only screen 
-  and (min-device-width: 768px) 
+@media screen and (min-width: 768px) 
   and (max-device-width: 1024px) 
   and (-webkit-min-device-pixel-ratio: 1) {
 	  h1{
@@ -223,12 +244,14 @@ p.tag{
 		padding-top:86px;
 	}
 }
-@media only screen 
-  and (max-device-width: 767px){ 
+@media screen and (max-width: 767px){ 
+	body{
+		/*margin-top:-40px;*/
+	}
 	h1{
-		font-size:2.5em;
+		font-size:3em;
 		margin: 0px 0 10px;
-		padding-top:86px;
+		padding-top:1.5em;
 	}
 	p.tag{
 		font-size:1em;

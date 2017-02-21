@@ -77,8 +77,8 @@ export default{
   	  	width: 100%;
 	  	height: 70vh;
 	  	font-size:3em;
-	  	padding-top:12vh;
-	  	background:url(src/img/red_dot.svg) left top / contain no-repeat;
+	  	padding-top:9vh;
+	  	background:url(src/img/red_dot.svg) left top / 100% auto no-repeat;
 	  	/*transform:translateX(0);*/
 	  	
 	  	a{
@@ -93,22 +93,35 @@ export default{
 	  		padding:0;
 	  		margin:0;
 
-	  	}
-
+		  	.guy{
+		  		position:absolute;
+		  		top:-18px;
+		  		left:0;
+		  		height:77px;
+		  		width:70px;
+		  		background:url(src/img/worker.svg) left -10px / 92% 100% no-repeat;
+		  		z-index:40;
+		  		opacity:0;
+		  		transform:translateX(0);
+		  		transition:all 0.3s;
+		  		border-bottom:1px solid $red;
+		  		padding-bottom: 20px;
+		  	}
+		}
 	  	a:hover{
 	  		/*padding-left:70px;*/
-	  		transform:translateX(30px)
+	  		transform:translateX(30px);
 	  	}
 	  	a:hover .guy{
 	  		opacity:1;
-	  		transform:translateX(-70px) rotate(0deg)
+	  		transform:translateX(-70px);
 	  	}	  	
   	  }
   
 	  .map{
 	  	position:absolute;
 	  	width: 100%;
-	  	height: 70vh;
+	  	height: 100vh;
 	  	background:#e6e6e6;
 	  	overflow:hidden; 
 	  	position:relative;
@@ -129,32 +142,19 @@ export default{
 	  }
 	  .map::before{
 	  	position:absolute;
-	  	left:-20%;
+	  	left:0%;
 	  	top:-5%;
 	  	transform:translateX(0);
 	  	content:'';
 	    width:100%;
 	    height:100%;
-	    background:url(src/img/me_bkg4.jpeg) center center / contain no-repeat;
+	    background:url(src/img/me_bkg4.jpeg) center center / cover no-repeat;
 		opacity:0.2;
 		transition:all 0.5s;
 	    /*@include three-gradient ($light-grey, 0%, $grey-blue, 40%, $light-grey, 100%)*/
 	  }
 	  
-	  .guy{
-  		position:absolute;
-  		top:-18px;
-  		left:0;
-  		height:77px;
-  		width:70px;
-  		background:url(src/img/worker.svg) left top / 60px 60px no-repeat;
-  		z-index:40;
-  		opacity:0;
-  		transform:translateX(0);
-  		transition:all 0.3s;
-  		border-bottom:1px solid $red;
-  		padding-bottom: 20px;
-	  	}
+	  
 	}
   h1{
   	color:$dark-grey;
@@ -174,6 +174,77 @@ export default{
 		    transition:all 3s;
 		  }*/
 	  }
+}
+/* tablet */
+@media screen and (min-width: 768px) 
+and (max-device-width: 1024px){
+	.slide4{
+	  .contact-container{
+		  	.content{
+			  	padding-top:1vh;
+			  	font-size:3em;
+			  	/*border:1px solid grey;*/
+			  	
+			}
+		}
+	  
+	}
+}
+/* phone */
+@media screen 
+  and (max-width: 767px){ 
+  	.slide4{
+  		h1{
+  			font-size:4em;
+  		}
+	  .contact-container{
+		  	.content{
+			  	padding-top:20vh;
+			  	font-size:1.5em;
+			  	background:none;
+			  	/*border:1px solid grey;*/
+			  	a{
+			  		border:none;
+			  		.guy{
+			  			opacity:1;
+			  			width:100%;
+			  			height:60px;
+			  			border:none;
+			  			background:url(src/img/worker.svg) left top / 100% 100% no-repeat;
+			  			transform:translateX(0) translateY(3em)
+			  		}
+			  	}
+			  	a::after{
+				  content:'';
+				  height:1px;
+				  display:block;
+
+				  @include three-gradient ($red-low, 0%, $red, 50%, $red-low, 100%);
+				  
+				}
+			  	a:hover{
+			  		/*padding-left:70px;*/
+			  		transform:translateX(0px)
+			  	}
+			  	a:hover .guy{
+			  		opacity:1;
+			  		transform:translateX(0) translateY(3em)
+			  	}
+			  	/*a:active .guy{
+			  		opacity:1;
+			  		transform:translateX(158vw) translateY(3em)
+			  	}*/			  	
+			  	
+			}
+			.map{
+			  	width:300%;
+			  	opacity:0.5;
+			}
+		}
+
+	  
+	}
+	
 }
 
 

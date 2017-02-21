@@ -2,20 +2,20 @@
 	<div class="container slide3" id="/About" rel="About">
 		<div class="row">
 		<h1>About</h1>
-    <p class="tag">I am a self-taught programmer/designer who has been making things on the web for various clients and myself for over a decade. 
-      I live somewhere in between the creative and technical aspects of the web.  </p>
+    <p class="tag">I am a developer / designer living in North Carolina who has been making stuff on the web for various clients and myself for over a decade.  
+    I love working for talented people, along side of talented people and by myself.</p>
 		<div class="skills-content">
 			<div class="bracket"></div>
 			<ul>
 				<li v-for="l in leftSide">
 				<h3>{{l.title}}</h3>
-				<p>{{l.content}}</p>
+				<p v-html="l.content"></p>
 				</li>
 			</ul>
 			<ul>
 				<li v-for="r in rightSide">
 				<h3>{{r.title}}</h3>
-				<p>{{r.content}}</p>
+				<p v-html="r.content"></p>
 				</li>
 			</ul>
 		</div>
@@ -30,10 +30,10 @@
 		return{
 			leftSide: [{
 				title: 'Philosophy',
-				content:'Make it Functional, Make it Beautiful, Make it Special, for all devices. Learn, Learn, Learn'
+				content:'Make it Functional, Make it Beautiful, Make it Special, for all devices. Learn, Learn, Learn.'
 			},{
 				title: 'For Hire',
-				content: 'I have a lot of experience working for clients and with other talented people.  Contact me and let help you with your next project.'
+				content: 'I have a lot of experience working for clients and with other talented creative teams.  <a href="#/Contact">Contact me</a> and let help you with your next project.'
 			}],
 			rightSide:[{
 				title:'Languages',
@@ -62,9 +62,15 @@
   }
   p{
     color:#e3e8e8;
+    a, a:visited{
+      color:$grey-blue;
+    }
+    a:hover, active{
+      color:$light-grey;
+    }
   }
   .skills-content{
-  	width:80vw;
+  	width:100%;
   	/*border:1px solid black;*/
 
   	
@@ -73,7 +79,7 @@
   		margin:0px;
   		width:100%;
   		height:100px;
-  		background:url(src/img/icons/greyblue_bracket.svg) center bottom / 60% 60%  no-repeat;
+  		background:url(src/img/icons/greyblue_bracket.svg) center bottom / 50% auto  no-repeat;
   	}
 
   	ul{
@@ -84,13 +90,11 @@
   		list-style: none;
   		width:48%;
   		height:60vh;
-  		/*border:1px solid lightgreen;*/
   		
 
   		li{
   			display:block;
   			padding-bottom:10px;
-  			/*border:1px solid pink;*/
 
   			h3{
   				margin:0.6em 0 1em 0;
@@ -106,7 +110,7 @@
   			}
   		}
 
-  		li::after{
+  		li:nth-child(1)::after{
   			content:'';
   			width:50%;
   			height:40px;
@@ -115,6 +119,51 @@
   		}
   	}
   }
+}
+/* tablet */
+@media screen and (min-width: 768px) 
+and (max-width: 1024px){
+
+    
+}
+/* phone */
+@media screen 
+  and (max-width: 767px){ 
+    .slide3{
+      h1{
+        font-size:4em;
+      }
+      .bracket{
+        display:none;
+      }
+      .skills-content{
+        width:100%;
+        margin-top:4em;
+        ul{
+          display:block;
+          width:100%;
+          height:auto;
+
+          li:nth-child(2)::after{
+            content:'';
+            width:50%;
+            height:40px;
+            border-right:1px solid $grey-blue;
+            display:block;
+          }
+        }
+        ul:nth-child(3) li:nth-child(2)::after{
+          padding:4em 0;
+        }
+
+       /* ul:nth-child(3) li:nth-child(2):after{
+            padding-bottom:12em;
+          }*/
+      }
+    }
+
+
+  
 }
 
 </style>

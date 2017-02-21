@@ -87,11 +87,11 @@ export default{
 @import '../stylesheets/partials/_resources.scss';
 
 .slide1{
-  background:$light-grey;
+  background:$light-grey url(src/img/me_me_big.jpeg) center 60px / 100px auto no-repeat;
   position:relative;
   left:0;
 
-  h1{ color: $dark-grey; }
+  h1{ color: $dark-grey;}
   p{ 
   	color:$dark-grey;
   	
@@ -245,23 +245,29 @@ export default{
 	}
 }
 /* tablet */
-@media only screen and (min-device-width: 768px) 
+@media screen and (min-width: 768px) 
 and (max-device-width: 1024px){
 
 	  
 }
 /* phone */
-@media only screen 
-  and (max-device-width: 767px){ 
+@media screen and(max-width: 767px){ 
 
 	.graphic{
 		/*width:90vw;*/
 		.graphic-title{
 		  height:auto;
 		  background: none;
-		  border-bottom:1px solid $red;
+		  /*border-bottom:1px solid $red;*/
 		  width:80%;
 		  margin:2em 0 5em 10%;
+		}
+		.graphic-title::after{
+		  content:'';
+		  height:1px;
+		  display:block;
+		  @include three-gradient ($red-low, 0%, $red, 50%, $red-low, 100%);
+		  
 		}
 		.graphic-header{
 			display:none;
@@ -356,7 +362,6 @@ and (max-device-width: 1024px){
 				}
 				li:nth-child(4){
 				  color:$red;
-				  border-bottom:1px solid $red;
 				  background: $light-grey;
 				  height:2em;
 				  margin-top:0;
@@ -368,6 +373,13 @@ and (max-device-width: 1024px){
 				  width:66%;
 				}
 				li:nth-child(4)::after{
+				  content:'';
+				  height:1px;
+				  display:block;
+				  @include three-gradient ($red-low, 0%, $red, 50%, $red-low, 100%);
+				  
+				}
+				li:nth-child(4)::before{
 				  content:'';
 				  position:absolute;	
 				  left:0;
@@ -435,7 +447,7 @@ and (max-device-width: 1024px){
 	}
 	
 }
-@media only screen and (min-device-width: 530px)
+@media screen and (min-device-width: 530px)
 	and (max-device-width: 767px)
   {
   	.graphic{
